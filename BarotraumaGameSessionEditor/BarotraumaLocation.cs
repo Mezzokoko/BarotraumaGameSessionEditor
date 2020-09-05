@@ -99,20 +99,28 @@ namespace BarotraumaGameSessionEditor
             return Type.ToString();
         }
 
+        public List<BarotraumaLocationConnection> GetConnections()
+        {
+            List<BarotraumaLocationConnection> Connections = new List<BarotraumaLocationConnection>();
+
+            foreach (BarotraumaLocationConnection Connection in ParentSession.Connections)
+            {
+                if (Connection.ConnectedLocations.Contains(LocationIndex))
+                {
+                    Connections.Add(Connection);
+                }
+            }
+
+            return Connections;
+        }
+
         public List<BarotraumaLocation> GetConnectedLocations()
         {
             List<BarotraumaLocation> Locations = new List<BarotraumaLocation>();
 
-            foreach (BarotraumaLocationConnection Connection in ParentSession.Connections)
+            foreach (BarotraumaLocationConnection Connection in GetConnections())
             {
-                IntTuple ConnectionTuple = Connection.ConnectedLocations;
-
-                if (!ConnectionTuple.Contains(LocationIndex))
-                {
-                    continue;
-                }
-
-                int OtherLocationIndex = ConnectionTuple.GetOther(LocationIndex);
+                int OtherLocationIndex = Connection.ConnectedLocations.GetOther(LocationIndex);
 
                 BarotraumaLocation OtherLocation = ParentSession.Locations[OtherLocationIndex];
 
