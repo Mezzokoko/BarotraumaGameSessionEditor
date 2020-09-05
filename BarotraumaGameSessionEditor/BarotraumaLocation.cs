@@ -12,6 +12,7 @@ namespace BarotraumaGameSessionEditor
     {
         None,
         Outpost,
+        Mine,
         Research,
         City,
         Military,

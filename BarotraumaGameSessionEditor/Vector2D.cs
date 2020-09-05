@@ -15,10 +15,8 @@ namespace BarotraumaGameSessionEditor
         {
             string[] SeparatedCoordinatesString = PackedCoordinateString.Split(',');
 
-            float X = float.Parse(SeparatedCoordinatesString[0]);
-            float Y = float.Parse(SeparatedCoordinatesString[1]);
-
-            new Vector2D(X,Y);
+            this.X = float.Parse(SeparatedCoordinatesString[0]);
+            this.Y = float.Parse(SeparatedCoordinatesString[1]);
         }
 
         public Vector2D(float X, float Y)

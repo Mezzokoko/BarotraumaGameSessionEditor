@@ -72,16 +72,42 @@ namespace BarotraumaGameSessionEditor
             get => XmlHelpers.GetAttributeFromName(ParentNode, Name).Value;
         }
 
+        public Vector2D VectorValue
+        {
+            set => StringValue = value.ToString();
+            get => new Vector2D(StringValue);
+        }
+
         public BarotraumaLocationType LocationTypeValue
         {
             set => StringValue = value.ToString();
             get => (BarotraumaLocationType)Enum.Parse(typeof(BarotraumaLocationType), StringValue);
         }
 
-        public Vector2D VectorValue
+        public BarotraumaBiome BiomeValue
         {
             set => StringValue = value.ToString();
-            get => new Vector2D(StringValue);
+            get => (BarotraumaBiome)Enum.Parse(typeof(BarotraumaBiome), StringValue);
+        }
+
+        public BarotraumaGenerationParams GenerationParamsValue
+        {
+            set => StringValue = value.ToString();
+            get => (BarotraumaGenerationParams)Enum.Parse(typeof(BarotraumaGenerationParams), StringValue);
+        }
+
+        public Tuple<int, int> TupleValue
+        {
+            set => StringValue = value.Item1.ToString() + "," + value.Item2.ToString();
+            get
+            {
+                string[] SplitStrings = StringValue.Split(',');
+
+                int A = Int32.Parse(SplitStrings[0]);
+                int B = Int32.Parse(SplitStrings[1]);
+
+                return new Tuple<int, int>(A, B);
+            }
         }
     }
 }

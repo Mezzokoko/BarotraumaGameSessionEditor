@@ -26,6 +26,7 @@ namespace BarotraumaGameSessionEditor
         public XmlNode CampaignMap;
 
         public ArrayList Locations = new ArrayList();
+        public ArrayList Connections = new ArrayList();
 
         public int Money
         {
@@ -73,6 +74,11 @@ namespace BarotraumaGameSessionEditor
                     }
 
                     Locations[Index] = NewLocation;
+                }
+
+                if (Child.Name == "connection")
+                {
+                    Connections.Add(new BarotraumaLocationConnection(Child));
                 }
             }
         }

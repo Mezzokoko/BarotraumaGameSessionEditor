@@ -16,10 +16,18 @@ namespace BarotraumaGameSessionEditor
             //Read Map locations and print
             BarotraumaGameSession Session = new BarotraumaGameSession("gamesession.xml");
 
-            foreach (BarotraumaLocation L in Session.Locations)
+            foreach (BarotraumaLocationConnection C in Session.Connections)
             {
-                Console.WriteLine(L.Depth.ToString());
+                float NewStartingDifficulty = 70.0f;
+                float NewEndDifficulty = 120.0f;
+
+                float DifficultyScale = (NewEndDifficulty - NewStartingDifficulty) / 100.0f;
+
+                C.Difficulty *= (1 - DifficultyScale);
+                C.Difficulty += NewStartingDifficulty;
             }
+
+            Session.SaveToFile("newxml.xml");
 
             Console.ReadLine();
         }
