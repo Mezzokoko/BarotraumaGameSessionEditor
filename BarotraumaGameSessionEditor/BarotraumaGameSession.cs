@@ -25,8 +25,8 @@ namespace BarotraumaGameSessionEditor
         public XmlNode MetaData;
         public XmlNode CampaignMap;
 
-        public ArrayList Locations = new ArrayList();
-        public ArrayList Connections = new ArrayList();
+        public List<BarotraumaLocation> Locations = new List<BarotraumaLocation>();
+        public List<BarotraumaLocationConnection> Connections = new List<BarotraumaLocationConnection>();
 
         public int Money
         {
@@ -62,9 +62,9 @@ namespace BarotraumaGameSessionEditor
             {
                 if (Child.Name == "location")
                 {
-                    BarotraumaLocation NewLocation = new BarotraumaLocation(Child);
+                    BarotraumaLocation NewLocation = new BarotraumaLocation(this, Child);
 
-                    int Index = NewLocation.Index;
+                    int Index = NewLocation.LocationIndex;
 
                     int HighestIndex = Locations.Count;
 
@@ -78,7 +78,7 @@ namespace BarotraumaGameSessionEditor
 
                 if (Child.Name == "connection")
                 {
-                    Connections.Add(new BarotraumaLocationConnection(Child));
+                    Connections.Add(new BarotraumaLocationConnection(this, Child));
                 }
             }
         }

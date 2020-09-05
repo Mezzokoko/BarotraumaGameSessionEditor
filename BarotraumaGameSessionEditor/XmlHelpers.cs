@@ -96,9 +96,9 @@ namespace BarotraumaGameSessionEditor
             get => (BarotraumaGenerationParams)Enum.Parse(typeof(BarotraumaGenerationParams), StringValue);
         }
 
-        public Tuple<int, int> TupleValue
+        public IntTuple TupleValue
         {
-            set => StringValue = value.Item1.ToString() + "," + value.Item2.ToString();
+            set => StringValue = value.A.ToString() + "," + value.B.ToString();
             get
             {
                 string[] SplitStrings = StringValue.Split(',');
@@ -106,7 +106,7 @@ namespace BarotraumaGameSessionEditor
                 int A = Int32.Parse(SplitStrings[0]);
                 int B = Int32.Parse(SplitStrings[1]);
 
-                return new Tuple<int, int>(A, B);
+                return new IntTuple(A, B);
             }
         }
     }

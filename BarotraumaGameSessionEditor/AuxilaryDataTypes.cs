@@ -30,4 +30,32 @@ namespace BarotraumaGameSessionEditor
             return X.ToString() + "," + Y.ToString();
         }
     }
+
+    public class IntTuple
+    {
+        public int A, B;
+
+        public IntTuple(int A, int B)
+        {
+            this.A = A;
+            this.B = B;
+        }
+
+        public bool Contains(int Value)
+        {
+            return A == Value || B == Value;
+        }
+
+        public int GetOther(int Value)
+        {
+            System.Diagnostics.Debug.Assert(Contains(Value));
+
+            if (A == Value)
+            {
+                return B;
+            }
+
+            return A;
+        }
+    }
 }

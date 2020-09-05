@@ -30,10 +30,8 @@ namespace BarotraumaGameSessionEditor
         endlocationbasic
     }
 
-    public class BarotraumaLocationConnection
+    public class BarotraumaLocationConnection : BarotraumaMapObject
     {
-        XmlNode ConnectionNode;
-
         private XmlAttributeProperty DifficultyAttribute;
         private XmlAttributeProperty DifficultyAttributeLevel;
         private XmlAttributeProperty BiomeAttribute;
@@ -42,17 +40,15 @@ namespace BarotraumaGameSessionEditor
         private XmlAttributeProperty LevelSizeAttribute;
         private XmlAttributeProperty GenerationParamsAttribute;
 
-        public BarotraumaLocationConnection(XmlNode ConnectionNode)
+        public BarotraumaLocationConnection(BarotraumaGameSession ParentSession, XmlNode ObjectNode) : base(ParentSession, ObjectNode)
         {
-            this.ConnectionNode = ConnectionNode;
+            XmlNode LevelNode = XmlHelpers.GetSingleNodeFromName(ObjectNode, "Level");
 
-            XmlNode LevelNode = XmlHelpers.GetSingleNodeFromName(ConnectionNode, "Level");
-
-            DifficultyAttribute = new XmlAttributeProperty(ConnectionNode, "difficulty");
+            DifficultyAttribute = new XmlAttributeProperty(ObjectNode, "difficulty");
             DifficultyAttributeLevel = new XmlAttributeProperty(LevelNode, "difficulty");
-            BiomeAttribute = new XmlAttributeProperty(ConnectionNode, "biome");
+            BiomeAttribute = new XmlAttributeProperty(ObjectNode, "biome");
             BiomeAttributeLevel = new XmlAttributeProperty(LevelNode, "biome");
-            ConnectedLocationsAttribute = new XmlAttributeProperty(ConnectionNode, "locations");
+            ConnectedLocationsAttribute = new XmlAttributeProperty(ObjectNode, "locations");
             LevelSizeAttribute = new XmlAttributeProperty(LevelNode, "size");
             GenerationParamsAttribute = new XmlAttributeProperty(LevelNode, "generationparams");
         }
@@ -77,13 +73,13 @@ namespace BarotraumaGameSessionEditor
             }
         }
 
-        public Tuple<int, int> ConnectedLocations
+        public IntTuple ConnectedLocations
         {
             get => ConnectedLocationsAttribute.TupleValue;
             set => ConnectedLocationsAttribute.TupleValue = value;
         }
 
-        public Tuple<int, int> LevelSize
+        public IntTuple LevelSize
         {
             get => LevelSizeAttribute.TupleValue;
             set => LevelSizeAttribute.TupleValue = value;

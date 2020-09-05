@@ -45,9 +45,10 @@
     <Compile Include="BarotraumaGameSession.cs" />
     <Compile Include="BarotraumaLocation.cs" />
     <Compile Include="BarotraumaLocationConnection.cs" />
+    <Compile Include="BarotraumaMapObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vector2D.cs" />
+    <Compile Include="AuxilaryDataTypes.cs" />
     <Compile Include="XmlHelpers.cs" />
   </ItemGroup>
   <ItemGroup>

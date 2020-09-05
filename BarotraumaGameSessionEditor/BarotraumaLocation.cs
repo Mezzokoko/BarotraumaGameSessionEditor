@@ -22,35 +22,31 @@ namespace BarotraumaGameSessionEditor
         RandomButNotEndLocation
     }
 
-    public class BarotraumaLocation
+    public class BarotraumaLocation : BarotraumaMapObject
     {
         static Random RNG = new Random(Convert.ToInt32(DateTime.UtcNow.Ticks % Int32.MaxValue));
 
-        XmlNode LocationNode;
-
-        private XmlAttributeProperty IndexAttribute;
+        private XmlAttributeProperty LocationIndexAttribute;
         private XmlAttributeProperty LocationTypeAttribute;
         private XmlAttributeProperty MapLocationAttribute;
         private XmlAttributeProperty DepthAttribute;
         private XmlAttributeProperty TradePriceMultiplierAttribute;
         private XmlAttributeProperty RepairPriceMultiplierAttribute;
 
-        public BarotraumaLocation(XmlNode LocationNode)
+        public BarotraumaLocation(BarotraumaGameSession ParentSession, XmlNode ObjectNode) : base(ParentSession, ObjectNode)
         {
-            this.LocationNode = LocationNode;
-
-            IndexAttribute = new XmlAttributeProperty(LocationNode, "i");
-            LocationTypeAttribute = new XmlAttributeProperty(LocationNode, "type");
-            MapLocationAttribute = new XmlAttributeProperty(LocationNode, "position");
-            DepthAttribute = new XmlAttributeProperty(LocationNode, "normalizeddepth");
-            TradePriceMultiplierAttribute = new XmlAttributeProperty(LocationNode, "pricemultiplier");
-            RepairPriceMultiplierAttribute = new XmlAttributeProperty(LocationNode, "mechanicalpricemultipler");
+            LocationIndexAttribute = new XmlAttributeProperty(ObjectNode, "i");
+            LocationTypeAttribute = new XmlAttributeProperty(ObjectNode, "type");
+            MapLocationAttribute = new XmlAttributeProperty(ObjectNode, "position");
+            DepthAttribute = new XmlAttributeProperty(ObjectNode, "normalizeddepth");
+            TradePriceMultiplierAttribute = new XmlAttributeProperty(ObjectNode, "pricemultiplier");
+            RepairPriceMultiplierAttribute = new XmlAttributeProperty(ObjectNode, "mechanicalpricemultipler");
         }
 
-        public int Index
+        public int LocationIndex
         {
-            set => IndexAttribute.IntegerValue = value;
-            get => IndexAttribute.IntegerValue;
+            set => LocationIndexAttribute.IntegerValue = value;
+            get => LocationIndexAttribute.IntegerValue;
         }
 
         public BarotraumaLocationType LocationType
@@ -101,6 +97,32 @@ namespace BarotraumaGameSessionEditor
             }
 
             return Type.ToString();
+        }
+
+        public List<BarotraumaLocation> GetConnectedLocations()
+        {
+            List<BarotraumaLocation> Locations = new List<BarotraumaLocation>();
+
+            foreach (BarotraumaLocationConnection Connection in ParentSession.Connections)
+            {
+                IntTuple ConnectionTuple = Connection.ConnectedLocations;
+
+                if (!ConnectionTuple.Contains(LocationIndex))
+                {
+                    continue;
+                }
+
+                int OtherLocationIndex = ConnectionTuple.GetOther(LocationIndex);
+
+                BarotraumaLocation OtherLocation = ParentSession.Locations[OtherLocationIndex];
+
+                if (OtherLocation != null)
+                {
+                    Locations.Add(OtherLocation);
+                }
+            }
+
+            return Locations;
         }
     }
 }
