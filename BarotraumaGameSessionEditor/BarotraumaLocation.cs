@@ -22,7 +22,7 @@ namespace BarotraumaGameSessionEditor
         RandomButNotEndLocation
     }
 
-    public class BarotraumaLocation : BarotraumaMapObject
+    public class BarotraumaLocation : BarotraumaXmlObject
     {
         static Random RNG = new Random(Convert.ToInt32(DateTime.UtcNow.Ticks % Int32.MaxValue));
 

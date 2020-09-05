@@ -25,6 +25,8 @@ namespace BarotraumaGameSessionEditor
         public XmlNode MetaData;
         public XmlNode CampaignMap;
 
+        public List<BarotraumaReputation> Reputations = new List<BarotraumaReputation>();
+
         public List<BarotraumaLocation> Locations = new List<BarotraumaLocation>();
         public List<BarotraumaLocationConnection> Connections = new List<BarotraumaLocationConnection>();
 
@@ -50,15 +52,25 @@ namespace BarotraumaGameSessionEditor
 
             MultiplayerCampaign = XmlHelpers.GetSingleNodeFromName(GameSession, "MultiPlayerCampaign");
 
-            MetaData = XmlHelpers.GetSingleNodeFromName(MultiplayerCampaign, "Metadata");
-            CampaignMap = XmlHelpers.GetSingleNodeFromName(MultiplayerCampaign, "map");
-
             MoneyAttribute = new XmlAttributeProperty(MultiplayerCampaign, "money");
 
-            //Collect Locations in Array            
-            XmlNodeList MapObjects = CampaignMap.ChildNodes;
+            //Sort out Metadata
+            MetaData = XmlHelpers.GetSingleNodeFromName(MultiplayerCampaign, "Metadata");
 
-            foreach (XmlNode Child in MapObjects)
+            foreach (XmlNode Child in MetaData.ChildNodes)
+            {
+                XmlAttribute KeyAttribute = XmlHelpers.GetAttributeFromName(Child, "key");
+
+                if (KeyAttribute.Value.Split('.')[0] == "reputation")
+                {
+                    Reputations.Add(new BarotraumaReputation(this, Child));
+                }
+            }
+
+            //Sort out Map Objects
+            CampaignMap = XmlHelpers.GetSingleNodeFromName(MultiplayerCampaign, "map");
+
+            foreach (XmlNode Child in CampaignMap.ChildNodes)
             {
                 if (Child.Name == "location")
                 {

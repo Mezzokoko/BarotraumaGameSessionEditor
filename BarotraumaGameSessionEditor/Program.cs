@@ -16,12 +16,13 @@ namespace BarotraumaGameSessionEditor
             //Read Map locations and print
             BarotraumaGameSession Session = new BarotraumaGameSession("gamesession.xml");
 
-            BarotraumaLocation Location = Session.Locations[45];
-
-            foreach (BarotraumaLocation OtherLocation in Location.GetConnectedLocations())
+            foreach (BarotraumaReputation Reputation in Session.Reputations)
             {
-                Console.WriteLine(OtherLocation.LocationIndex);
+                Console.WriteLine(Reputation.Faction + " " + Reputation.LocationIndex + " " + Reputation.ReputationValue);
+                Reputation.ReputationValue = 100;
             }
+
+            Session.SaveToFile("newxml.xml");
 
             Console.ReadLine();
         }

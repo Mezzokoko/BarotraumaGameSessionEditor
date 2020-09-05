@@ -8,12 +8,12 @@ using System.Xml;
 
 namespace BarotraumaGameSessionEditor
 {
-    public abstract class BarotraumaMapObject
+    public abstract class BarotraumaXmlObject
     {
         protected BarotraumaGameSession ParentSession;
         protected XmlNode ObjectNode;
 
-        public BarotraumaMapObject(BarotraumaGameSession ParentSession, XmlNode ObjectNode)
+        public BarotraumaXmlObject(BarotraumaGameSession ParentSession, XmlNode ObjectNode)
         {
             this.ParentSession = ParentSession;
             this.ObjectNode = ObjectNode;

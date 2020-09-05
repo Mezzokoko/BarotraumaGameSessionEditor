@@ -30,7 +30,7 @@ namespace BarotraumaGameSessionEditor
         endlocationbasic
     }
 
-    public class BarotraumaLocationConnection : BarotraumaMapObject
+    public class BarotraumaLocationConnection : BarotraumaXmlObject
     {
         private XmlAttributeProperty DifficultyAttribute;
         private XmlAttributeProperty DifficultyAttributeLevel;
