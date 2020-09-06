@@ -19,11 +19,11 @@ namespace BarotraumaGameSessionEditor
         private XmlDocument GameSessionDocument;
         private XmlNode GameSession;
 
-        private XmlAttributeProperty MoneyAttribute;
+        private XmlNode MultiplayerCampaign;
+        private XmlNode MetaData;
+        private XmlNode CampaignMap;
 
-        public XmlNode MultiplayerCampaign;
-        public XmlNode MetaData;
-        public XmlNode CampaignMap;
+        private XmlAttributeProperty MoneyAttribute;
 
         public List<BarotraumaReputation> Reputations = new List<BarotraumaReputation>();
 
@@ -101,6 +101,87 @@ namespace BarotraumaGameSessionEditor
             dynamic _B = B;
 
             return (T)(Alpha * (_B - _A)) + _A;
+        }
+
+        private BarotraumaReputation GetReputationWithFaction(BarotraumaFaction Faction)
+        {
+            if (Faction == BarotraumaFaction.location)
+            {
+                return null;
+            }
+
+            foreach (BarotraumaReputation R in Reputations)
+            {
+                if (R.Faction == Faction)
+                {
+                    return R;
+                }
+            }
+
+            return null;
+        }
+
+        private BarotraumaReputation GetReputationWithLocation(int LocationIndex)
+        {
+            foreach (BarotraumaReputation R in Reputations)
+            {
+                if (R.Faction == BarotraumaFaction.location && R.LocationIndex == LocationIndex)
+                {
+                    return R;
+                }
+            }
+
+            return null;
+        }
+
+        public int GetReputationValueWithFaction(BarotraumaFaction Faction)
+        {
+            BarotraumaReputation R = GetReputationWithFaction(Faction);
+
+            if (R == null)
+            {
+                return 0;
+            }
+
+            return R.ReputationValue;
+        }
+
+        public int GetReputationValueWithLocation(int LocationIndex)
+        {
+            BarotraumaReputation R = GetReputationWithLocation(LocationIndex);
+
+            if (R == null)
+            {
+                return 0;
+            }
+
+            return R.ReputationValue;
+        }
+
+        public void SetReputationWithLocation(int LocationIndex, int Value)
+        {
+            BarotraumaReputation R = GetReputationWithLocation(LocationIndex);
+
+            if (R != null)
+            {
+                R.ReputationValue = Value;
+                return;
+            }
+
+            //TODO: make new reputation object
+        }
+
+        public void SetReputationWithFaction(BarotraumaFaction Faction, int Value)
+        {
+            BarotraumaReputation R = GetReputationWithFaction(Faction);
+
+            if (R != null)
+            {
+                R.ReputationValue = Value;
+                return;
+            }
+
+            //TODO: make new reputation object
         }
 
         public void SetDifficultyBounds(float LowerBound, float HigherBound)
