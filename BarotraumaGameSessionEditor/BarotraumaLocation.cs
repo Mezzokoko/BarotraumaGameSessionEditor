@@ -132,5 +132,19 @@ namespace BarotraumaGameSessionEditor
 
             return Locations;
         }
+
+        public float GetAverageLocationDifficulty()
+        {
+            float DifficultyAccumulation = 0;
+
+            List<BarotraumaLocationConnection> LocalConnections = GetConnections();
+
+            foreach (BarotraumaLocationConnection C in LocalConnections)
+            {
+                DifficultyAccumulation += C.Difficulty;
+            }
+
+            return DifficultyAccumulation / LocalConnections.Count;
+        }
     }
 }

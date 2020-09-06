@@ -58,6 +58,19 @@ namespace BarotraumaGameSessionEditor
             get => DifficultyAttribute.FloatValue;
             set
             {
+                XmlAttribute DifficultyBackupAttribute;
+
+                string DifficultyBackupKey = "difficulty-backup";
+
+                DifficultyBackupAttribute = XmlHelpers.GetAttributeFromName(ObjectNode, DifficultyBackupKey);
+
+                if (DifficultyBackupAttribute == null)
+                {
+                    DifficultyBackupAttribute = ObjectNode.OwnerDocument.CreateAttribute(DifficultyBackupKey);
+                    DifficultyBackupAttribute.Value = DifficultyAttribute.StringValue;
+                    ObjectNode.Attributes.Append(DifficultyBackupAttribute);
+                }
+
                 DifficultyAttribute.FloatValue = value;
                 DifficultyAttributeLevel.FloatValue = value;
             }

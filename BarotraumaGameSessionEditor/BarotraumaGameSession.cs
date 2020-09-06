@@ -95,6 +95,47 @@ namespace BarotraumaGameSessionEditor
             }
         }
 
+        public static T Lerp<T>(T A, T B, float Alpha)
+        {
+            dynamic _A = A;
+            dynamic _B = B;
+
+            return (T)(Alpha * (_B - _A)) + _A;
+        }
+
+        public void SetDifficultyBounds(float LowerBound, float HigherBound)
+        {
+            float DifficultyScale = (HigherBound - LowerBound) / 100.0f;
+
+            foreach (BarotraumaLocationConnection C in Connections)
+            {
+                C.Difficulty = LowerBound + (C.Difficulty * DifficultyScale);
+            }
+        }
+
+        public void ScalePricesWithDifficulty(float PriceScaleAtFullDifficulty, float PriceScaleAtZeroDifficulty = 1)
+        {
+            foreach (BarotraumaLocation L in Locations)
+            {
+                float PriceScale = Lerp<float>(PriceScaleAtZeroDifficulty, PriceScaleAtFullDifficulty, L.GetAverageLocationDifficulty());
+
+                L.TradePriceMultiplier = PriceScale;
+                L.RepairPriceMultiplier = PriceScale;
+            }
+        }
+
+        public void ScaleLevelSizeWithDifficulty(Vector2D ScaleAtFullDifficulty)
+        {
+            foreach (BarotraumaLocationConnection C in Connections)
+            {
+                Vector2D CurrentLevelSize = new Vector2D(C.LevelSize.A, C.LevelSize.B);
+
+                CurrentLevelSize = Lerp<Vector2D>(CurrentLevelSize, CurrentLevelSize * ScaleAtFullDifficulty, C.Difficulty);
+
+                C.LevelSize = new IntTuple((int)CurrentLevelSize.X, (int)CurrentLevelSize.Y);
+            }
+        }
+
         public void SaveToFile(string FileName = null)
         {
             if (FileName == null)

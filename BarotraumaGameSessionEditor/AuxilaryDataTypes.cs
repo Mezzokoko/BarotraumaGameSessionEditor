@@ -25,6 +25,17 @@ namespace BarotraumaGameSessionEditor
             this.Y = Y;
         }
 
+        public static Vector2D operator +(Vector2D A, Vector2D B) => new Vector2D(A.X + B.X, A.Y + B.Y);
+        public static Vector2D operator -(Vector2D A, Vector2D B) => new Vector2D(A.X - B.X, A.Y - B.Y);
+        public static Vector2D operator +(Vector2D A) => A;
+        public static Vector2D operator -(Vector2D A) => new Vector2D(-A.X, -A.Y);
+
+        public static Vector2D operator *(Vector2D A, Vector2D B) => new Vector2D(A.X * B.X, A.Y * B.Y);
+        public static Vector2D operator /(Vector2D A, Vector2D B) => new Vector2D(A.X / B.X, A.Y / B.Y);
+        public static Vector2D operator *(Vector2D A, float B) => new Vector2D(A.X * B, A.Y * B);
+        public static Vector2D operator *(float A, Vector2D B) => B * A;
+        public static Vector2D operator /(Vector2D A, float B) => new Vector2D(A.X / B, A.Y / B);
+
         public override string ToString()
         {
             return X.ToString() + "," + Y.ToString();

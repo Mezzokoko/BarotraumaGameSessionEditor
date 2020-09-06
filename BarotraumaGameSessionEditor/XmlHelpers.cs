@@ -38,7 +38,6 @@ namespace BarotraumaGameSessionEditor
                 }
             }
 
-            System.Diagnostics.Debug.Assert(false);
             return null;
         }
     }
