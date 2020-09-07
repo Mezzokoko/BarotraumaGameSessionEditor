@@ -76,6 +76,16 @@ namespace BarotraumaGameSessionEditor
             this.Name = Name;
         }
 
+        public bool IsSet()
+        {
+            return XmlHelpers.GetAttributeFromName(ParentNode, Name) != null;
+        }
+
+        public void RemoveAttribute()
+        {
+            ParentNode.Attributes.Remove(XmlHelpers.GetAttributeFromName(ParentNode, Name));
+        }
+
         public int IntegerValue
         {
             set => StringValue = value.ToString();
@@ -90,7 +100,7 @@ namespace BarotraumaGameSessionEditor
 
         public string StringValue
         {
-            set => XmlHelpers.GetAttributeFromName(ParentNode, Name).Value = value;
+            set => XmlHelpers.SetNodeAttribute(ParentNode, Name, value);
             get => XmlHelpers.GetAttributeFromName(ParentNode, Name).Value;
         }
 

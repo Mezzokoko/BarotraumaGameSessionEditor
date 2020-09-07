@@ -186,6 +186,14 @@ namespace BarotraumaGameSessionEditor
             Reputations.Add(R);
         }
 
+        public void ResetAllDifficulties()
+        {
+            foreach (BarotraumaLocationConnection C in Connections)
+            {
+                C.ResetDifficulty();
+            }
+        }
+
         public void SetDifficultyBounds(float LowerBound, float HigherBound)
         {
             float DifficultyScale = (HigherBound - LowerBound) / 100.0f;

@@ -32,6 +32,7 @@ namespace BarotraumaGameSessionEditor
 
     public class BarotraumaLocationConnection : BarotraumaXmlObject
     {
+        private XmlAttributeProperty DifficultyAttributeBackup;
         private XmlAttributeProperty DifficultyAttribute;
         private XmlAttributeProperty DifficultyAttributeLevel;
         private XmlAttributeProperty BiomeAttribute;
@@ -44,6 +45,7 @@ namespace BarotraumaGameSessionEditor
         {
             XmlNode LevelNode = XmlHelpers.GetSingleNodeFromName(ObjectNode, "Level");
 
+            DifficultyAttributeBackup = new XmlAttributeProperty(ObjectNode, "difficulty-backup");
             DifficultyAttribute = new XmlAttributeProperty(ObjectNode, "difficulty");
             DifficultyAttributeLevel = new XmlAttributeProperty(LevelNode, "difficulty");
             BiomeAttribute = new XmlAttributeProperty(ObjectNode, "biome");
@@ -53,16 +55,22 @@ namespace BarotraumaGameSessionEditor
             GenerationParamsAttribute = new XmlAttributeProperty(LevelNode, "generationparams");
         }
 
+        public void ResetDifficulty()
+        {
+            DifficultyAttribute.StringValue = DifficultyAttributeBackup.StringValue;
+            DifficultyAttributeLevel.StringValue = DifficultyAttributeBackup.StringValue;
+
+            DifficultyAttributeBackup.RemoveAttribute();
+        }
+
         public float Difficulty
         {
             get => DifficultyAttribute.FloatValue;
             set
             {
-                string DifficultyBackupKey = "difficulty-backup";
-
-                if (XmlHelpers.GetAttributeFromName(ObjectNode, DifficultyBackupKey) == null)
+                if (!DifficultyAttributeBackup.IsSet())
                 {
-                    XmlHelpers.SetNodeAttribute(ObjectNode, DifficultyBackupKey, DifficultyAttribute.StringValue);
+                    DifficultyAttributeBackup.StringValue = DifficultyAttribute.StringValue;
                 }
 
                 DifficultyAttribute.FloatValue = value;
