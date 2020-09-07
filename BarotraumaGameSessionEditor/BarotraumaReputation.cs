@@ -22,6 +22,27 @@ namespace BarotraumaGameSessionEditor
         private XmlAttributeProperty KeyAttribute;
         private XmlAttributeProperty ReputationValueAttribute;
 
+        private static XmlNode GetNewXmlReputationNode(BarotraumaGameSession ParentSession, string KeyValue, int ReputationValue)
+        {
+            XmlNode NewNode = XmlHelpers.AddSubNode(ParentSession.MetaData, "Data");
+
+            XmlHelpers.SetNodeAttribute(NewNode, "key", KeyValue);
+            XmlHelpers.SetNodeAttribute(NewNode, "value", ReputationValue.ToString());
+            XmlHelpers.SetNodeAttribute(NewNode, "type", "System.Single");
+
+            return NewNode;
+        }
+
+        //I know this is awful to read, blame C# for being fucking stupid about constructor overloading
+        public BarotraumaReputation(BarotraumaGameSession ParentSession, BarotraumaFaction Faction, int ReputationValue)
+            : this (ParentSession, GetNewXmlReputationNode(ParentSession, "reputation.faction." + Faction.ToString(), ReputationValue))
+        {
+            System.Diagnostics.Debug.Assert(Faction != BarotraumaFaction.location);
+        }
+
+        public BarotraumaReputation(BarotraumaGameSession ParentSession, int LocationIndex, int ReputationValue)
+            : this(ParentSession, GetNewXmlReputationNode(ParentSession, "reputation.location." + LocationIndex, ReputationValue)) {}
+
         public BarotraumaReputation(BarotraumaGameSession ParentSession, XmlNode ObjectNode) : base(ParentSession, ObjectNode)
         {
             KeyAttribute = new XmlAttributeProperty(ObjectNode, "key");

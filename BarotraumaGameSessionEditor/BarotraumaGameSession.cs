@@ -20,7 +20,7 @@ namespace BarotraumaGameSessionEditor
         private XmlNode GameSession;
 
         private XmlNode MultiplayerCampaign;
-        private XmlNode MetaData;
+        public XmlNode MetaData;
         private XmlNode CampaignMap;
 
         private XmlAttributeProperty MoneyAttribute;
@@ -168,7 +168,8 @@ namespace BarotraumaGameSessionEditor
                 return;
             }
 
-            //TODO: make new reputation object
+            R = new BarotraumaReputation(this, LocationIndex, Value);
+            Reputations.Add(R);
         }
 
         public void SetReputationWithFaction(BarotraumaFaction Faction, int Value)
@@ -181,7 +182,8 @@ namespace BarotraumaGameSessionEditor
                 return;
             }
 
-            //TODO: make new reputation object
+            R = new BarotraumaReputation(this, Faction, Value);
+            Reputations.Add(R);
         }
 
         public void SetDifficultyBounds(float LowerBound, float HigherBound)

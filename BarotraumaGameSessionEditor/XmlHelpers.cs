@@ -40,6 +40,29 @@ namespace BarotraumaGameSessionEditor
 
             return null;
         }
+
+        public static XmlNode AddSubNode(XmlNode ParentNode, string NodeName)
+        {
+            XmlNode NewNode = ParentNode.OwnerDocument.CreateElement(NodeName);
+            ParentNode.AppendChild(NewNode);
+
+            return NewNode;
+        }
+
+        public static void SetNodeAttribute(XmlNode ParentNode, string AttributeName, string AttributeValue)
+        {
+            XmlAttribute SelectedAttribtue = GetAttributeFromName(ParentNode, AttributeName);
+
+            if (SelectedAttribtue != null)
+            {
+                SelectedAttribtue.Value = AttributeValue;
+                return;
+            }
+
+            SelectedAttribtue = ParentNode.OwnerDocument.CreateAttribute(AttributeName);
+            SelectedAttribtue.Value = AttributeValue;
+            ParentNode.Attributes.Append(SelectedAttribtue);
+        }
     }
 
     public class XmlAttributeProperty
