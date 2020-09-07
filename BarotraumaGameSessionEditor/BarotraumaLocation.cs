@@ -26,6 +26,7 @@ namespace BarotraumaGameSessionEditor
     {
         static Random RNG = new Random(Convert.ToInt32(DateTime.UtcNow.Ticks % Int32.MaxValue));
 
+        private XmlAttributeProperty LocationNameAttribute;
         private XmlAttributeProperty LocationIndexAttribute;
         private XmlAttributeProperty LocationTypeAttribute;
         private XmlAttributeProperty MapLocationAttribute;
@@ -35,12 +36,18 @@ namespace BarotraumaGameSessionEditor
 
         public BarotraumaLocation(BarotraumaGameSession ParentSession, XmlNode ObjectNode) : base(ParentSession, ObjectNode)
         {
+            LocationNameAttribute = new XmlAttributeProperty(ObjectNode, "name");
             LocationIndexAttribute = new XmlAttributeProperty(ObjectNode, "i");
             LocationTypeAttribute = new XmlAttributeProperty(ObjectNode, "type");
             MapLocationAttribute = new XmlAttributeProperty(ObjectNode, "position");
             DepthAttribute = new XmlAttributeProperty(ObjectNode, "normalizeddepth");
             TradePriceMultiplierAttribute = new XmlAttributeProperty(ObjectNode, "pricemultiplier");
             RepairPriceMultiplierAttribute = new XmlAttributeProperty(ObjectNode, "mechanicalpricemultipler");
+        }
+
+        public string LocationName
+        {
+            get => LocationNameAttribute.StringValue;
         }
 
         public int LocationIndex

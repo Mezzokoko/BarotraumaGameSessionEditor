@@ -8,6 +8,8 @@ using System.Xml;
 using System.IO;
 using System.Collections;
 
+using System.Drawing;
+
 using BarotraumaGameSessionEditor;
 
 namespace BarotraumaGameSessionEditor
@@ -235,6 +237,122 @@ namespace BarotraumaGameSessionEditor
             }
 
             GameSessionDocument.Save(new StreamWriter(FileName));
+        }
+
+        public void SaveToImage(float CanvasScale = 1, float RenderScale = 8, int Margin = 100, string FileName = null)
+        {
+            if (FileName == null)
+            {
+                FileName = this.FileName + "_Image.png";
+            }
+
+            //Determine Map Dimensions
+            Vector2D InitLocation = Locations[0].MapLocation;
+
+            Vector2D MinPoint = InitLocation;
+            Vector2D MaxPoint = InitLocation;
+
+            foreach (BarotraumaLocation L in Locations)
+            {
+                Vector2D CurrentMapLocation = L.MapLocation;
+
+                MinPoint.X = Math.Min(MinPoint.X, CurrentMapLocation.X);
+                MinPoint.Y = Math.Min(MinPoint.Y, CurrentMapLocation.Y);
+                MaxPoint.X = Math.Max(MaxPoint.X, CurrentMapLocation.X);
+                MaxPoint.Y = Math.Max(MaxPoint.Y, CurrentMapLocation.Y);
+            }
+
+            //Determine Canvas Size and Margin
+            Vector2D MapDimensions = MaxPoint - MinPoint;
+
+            int CanvasWidth = (int)Math.Ceiling((CanvasScale * ((2 * Margin) + MapDimensions.X)));
+            int CanvasHeight = (int)Math.Ceiling((CanvasScale * ((2 * Margin) + MapDimensions.Y)));
+
+            int RenderWidth = (int)Math.Ceiling(CanvasWidth * RenderScale);
+            int RenderHeight = (int)Math.Ceiling(CanvasHeight * RenderScale);
+
+            //Setting up Render canvas and brushes
+            Bitmap RenderCanvas = new Bitmap(RenderWidth, RenderHeight);
+            Graphics Renderer = Graphics.FromImage(RenderCanvas);
+
+            Renderer.Clear(Color.White);
+
+            Func<Vector2D, Point> MapLocationToRenderCanvas = MapLocation =>
+            {
+                Vector2D TransformedLocation = MapLocation;
+                TransformedLocation -= MinPoint;
+                TransformedLocation += new Vector2D(Margin, Margin);
+                TransformedLocation *= CanvasScale * RenderScale;
+
+                return new Point((int)Math.Round(TransformedLocation.X), (int)Math.Round(TransformedLocation.Y));
+            };
+
+            Func<Point, int, Rectangle> GetSquare = (P, Width) =>
+            {
+                int HalfWidth = Width / 2;
+
+                P.X -= HalfWidth;
+                P.Y -= HalfWidth;
+
+                return new Rectangle(P, new Size(Width, Width));
+            };
+
+            Func<Color, Color, float, Color> LerpColor = (C1, C2, Alpha) =>
+            {
+                int R = Lerp<int>(C1.R, C2.R, Alpha);
+                int G = Lerp<int>(C1.G, C2.G, Alpha);
+                int B = Lerp<int>(C1.B, C2.B, Alpha);
+
+                return Color.FromArgb(R, G, B);
+            };
+
+            Pen RenderPen = new Pen(Color.Black, 5 * CanvasScale * RenderScale);
+            Brush RenderBrush = new SolidBrush(Color.Black);
+
+            int CircleWidth = (int)(40 * CanvasScale * RenderScale);
+
+            //Drawing Elements
+            foreach (BarotraumaLocationConnection C in Connections)
+            {
+                Color A, B;
+
+                bool LowDifficulty = C.Difficulty < 50;
+
+                A = LowDifficulty ? Color.Green : Color.Yellow;
+                B = LowDifficulty ? Color.Yellow : Color.Red;
+
+                RenderPen.Color = LerpColor(A, B, (C.Difficulty - (LowDifficulty ? 0 : 50)) / 50);
+
+                Point P1 = MapLocationToRenderCanvas(Locations[C.ConnectedLocations.A].MapLocation);
+                Point P2 = MapLocationToRenderCanvas(Locations[C.ConnectedLocations.B].MapLocation);
+
+                Renderer.DrawLine(RenderPen, P1, P2);
+            }
+
+            foreach (BarotraumaLocation L in Locations)
+            {
+                Point P_Circle = MapLocationToRenderCanvas(L.MapLocation);
+                Point P_Label = MapLocationToRenderCanvas(L.MapLocation + new Vector2D(0, 20));
+
+                Font StringFont = new Font(FontFamily.GenericSerif, 10 * CanvasScale * RenderScale);
+                string LocationString = L.LocationIndex.ToString() + ": " + L.LocationName + "\n";
+                LocationString += "Type: " + L.LocationType + "\n";
+
+                P_Label.X -= (int)(Renderer.MeasureString(LocationString, StringFont).Width / 2);
+
+                Renderer.FillEllipse(RenderBrush, GetSquare(P_Circle, CircleWidth));
+                Renderer.DrawString(LocationString, StringFont, RenderBrush, P_Label);
+
+            }
+
+            //Scaling down to canvas size and saving
+            Bitmap FinalCanvas = new Bitmap(CanvasWidth, CanvasHeight);
+            Graphics FinalRenderer = Graphics.FromImage(FinalCanvas);
+
+            FinalRenderer.Clear(Color.White);
+            FinalRenderer.DrawImage(RenderCanvas, 0, 0, CanvasWidth, CanvasHeight);
+
+            FinalCanvas.Save(FileName, System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }

@@ -15,6 +15,8 @@ namespace BarotraumaGameSessionEditor
             //Read Map locations and print
             BarotraumaGameSession Session = new BarotraumaGameSession("gamesession.xml");
 
+            Session.SaveToImage();
+
             Session.SaveToFile("newxml.xml");
 
             Console.ReadLine();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BarotraumaGameSessionEditor
 {
-    public class Vector2D
+    public struct Vector2D
     {
         public float X;
         public float Y;
@@ -42,7 +42,7 @@ namespace BarotraumaGameSessionEditor
         }
     }
 
-    public class IntTuple
+    public struct IntTuple
     {
         public int A, B;
 
