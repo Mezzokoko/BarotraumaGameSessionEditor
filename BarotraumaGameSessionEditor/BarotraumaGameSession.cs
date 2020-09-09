@@ -27,7 +27,7 @@ namespace BarotraumaGameSessionEditor
 
         private XmlAttributeProperty MoneyAttribute;
 
-        private XmlAttributeProperty CurrentLocationIndex;
+        private XmlAttributeProperty CurrentLocationAttribute;
 
         public List<BarotraumaReputation> Reputations = new List<BarotraumaReputation>();
 
@@ -38,6 +38,12 @@ namespace BarotraumaGameSessionEditor
         {
             get => MoneyAttribute.IntegerValue;
             set => MoneyAttribute.IntegerValue = value;
+        }
+
+        public int CurrentLocation
+        {
+            get => CurrentLocationAttribute.IntegerValue;
+            set => CurrentLocationAttribute.IntegerValue = value;
         }
 
         public BarotraumaGameSession(string FileName)
@@ -73,7 +79,7 @@ namespace BarotraumaGameSessionEditor
 
             //Sort out Map Objects
             CampaignMap = XmlHelpers.GetSingleNodeFromName(MultiplayerCampaign, "map");
-            CurrentLocationIndex = new XmlAttributeProperty(CampaignMap, "currentlocation");
+            CurrentLocationAttribute = new XmlAttributeProperty(CampaignMap, "currentlocation");
 
             foreach (XmlNode Child in CampaignMap.ChildNodes)
             {
@@ -344,7 +350,7 @@ namespace BarotraumaGameSessionEditor
 
                 P_Label.X -= (int)(Renderer.MeasureString(LocationString, StringFont).Width / 2);
 
-                Brush CurrentBrush = (L.LocationIndex == CurrentLocationIndex.IntegerValue) ? RedBrush : RenderBrush;
+                Brush CurrentBrush = (L.LocationIndex == CurrentLocation) ? RedBrush : RenderBrush;
                 Renderer.FillEllipse(CurrentBrush, GetSquare(P_Circle, CircleWidth));
                 Renderer.DrawString(LocationString, StringFont, RenderBrush, P_Label);
 
